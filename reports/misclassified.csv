@@ -1,0 +1,11 @@
+filepath,source,error,prob_ai,width,height,aspect,sharpness,saturation
+ai/e60eb4e924efeba0.jpg,AiArtData/AiArtData/AI-generated-images-art-.jpg,AI -> called real (FN),0.017271072,856,490,1.75,457.1,0.7
+real/6ce718c14b4d497c.jpg,RealArt/RealArt/noir.jpg,real -> called AI (FP),0.9819851,1200,676,1.78,102.0,0.0
+ai/6f4dd197612dfb23.jpg,AiArtData/AiArtData/NeseDevenot_02.jpg,AI -> called real (FN),0.05681739,488,670,0.73,536.0,0.44
+real/58532b57555b68b8.jpg,RealArt/RealArt/_MG_5812.jpg,real -> called AI (FP),0.9332022,2500,1667,1.5,482.0,0.35
+ai/82195b85c93737cd.jpg,AiArtData/AiArtData/ai-da-robot-ai-paintings-technology-news_dezeen_2364_col_8.jpg,AI -> called real (FN),0.09110611,2364,1576,1.5,1283.3,0.45
+ai/3098eb016cc3bb23.jpg,AiArtData/AiArtData/midjourney_trump_pope_dance_ai_fake_image.png,AI -> called real (FN),0.141179,1456,816,1.78,284.8,0.23
+ai/06a60550f600364d.jpg,AiArtData/AiArtData/5d395cf120e51-ai-transforms-celebrities-photo-into-old-portraits-paintings-5d380c2ebd006__700.jpg,AI -> called real (FN),0.855812,700,350,2.0,510.3,0.39
+ai/91436468c1c697b8.jpg,AiArtData/AiArtData/ai-art.png,AI -> called real (FN),0.848129,961,964,1.0,1050.1,0.21
+ai/5eb42bde6ebc4c38.jpg,AiArtData/AiArtData/amazonaws.com2Fpublic2Fimages2Fc5e787c1-70fc-4178-9f18-497c6ec85f79_832x832.jpeg,AI -> called real (FN),0.84325624,832,832,1.0,1933.7,0.44
+ai/9cfb21ecb4349c09.jpg,AiArtData/AiArtData/403e1ee688f55ae08740e13dbcaae5633f7c1d3a-4032x2268.jpg,AI -> called real (FN),0.84282357,4032,2268,1.78,860.7,0.31
