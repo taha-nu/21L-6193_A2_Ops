@@ -17,7 +17,7 @@ def build(hp):
         keras.layers.Dense(hp.Int("units", 32, 512, step=32), activation="relu"),
         keras.layers.Dense(10, activation="softmax")])
     model.compile(keras.optimizers.Adam(hp.Float("lr", 1e-4, 1e-2, sampling="log")),
-                  "sparse_categorical_crossentropy", ["accuracy"])
+                  "sparse_categorical_crossentropy", metrics=["accuracy"])
     return model
 
 

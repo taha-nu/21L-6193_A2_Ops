@@ -37,7 +37,7 @@ for lr in [1e-3, 1e-2]:
         model = keras.Sequential([keras.Input((28, 28)), keras.layers.Flatten(),
                                   keras.layers.Dense(params["units"], activation="relu"),
                                   keras.layers.Dense(10, activation="softmax")])
-        model.compile(keras.optimizers.Adam(lr), "sparse_categorical_crossentropy", ["accuracy"])
+        model.compile(keras.optimizers.Adam(lr), "sparse_categorical_crossentropy", metrics=["accuracy"])
         h = model.fit(x_tr, y_tr, validation_split=0.1, epochs=params["epochs"],
                       batch_size=params["batch_size"], verbose=2).history
         for e in range(params["epochs"]):                  # METRICS: numbers per step
