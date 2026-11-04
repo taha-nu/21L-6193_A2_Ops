@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}VisionGuard{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('main.index') }}"><span class="logo">◉</span> VisionGuard</a>
+    <nav>
+      <a href="{{ url_for('main.index') }}" class="{{ 'active' if request.endpoint in ('main.index','main.predict') }}">Upload</a>
+      <a href="{{ url_for('main.history') }}" class="{{ 'active' if request.endpoint == 'main.history' }}">History</a>
+      <a href="{{ url_for('main.health') }}">Health</a>
+    </nav>
+  </header>
+  <main class="wrap">{% block content %}{% endblock %}</main>
+  <footer class="foot">AI-vs-real image classifier · MLOps Assignment 2</footer>
+</body>
+</html>

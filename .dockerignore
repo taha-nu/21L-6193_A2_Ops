@@ -1,0 +1,26 @@
+# keep the build context small and secrets out of images
+.git
+.github
+.env
+.env.*
+!.env.example
+**/__pycache__
+*.pyc
+.venv
+venv
+data/
+mlruns/
+mlartifacts/
+tuner/
+tuner_toy/
+reports/
+report/
+labs/
+tests/
+models/runs/
+models/checkpoints/
+*.db
+.dvc/cache
+.pytest_cache
+.ruff_cache
+instance/

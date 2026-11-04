@@ -1,0 +1,29 @@
+{
+  "info": {
+    "name": "VisionGuard Model API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Set collection variables base_url (e.g. http://<vm-ip>:8080) and api_key. For the predict requests, open Body > form-data and choose a file for the 'image' key."
+  },
+  "variable": [
+    {"key": "base_url", "value": "http://YOUR-VM-IP:8080"},
+    {"key": "api_key", "value": "YOUR-API-KEY"}
+  ],
+  "item": [
+    {"name": "Health", "request": {"method": "GET", "url": "{{base_url}}/api/v1/health"}},
+    {"name": "Predict (with key)", "request": {"method": "POST",
+      "header": [{"key": "X-API-Key", "value": "{{api_key}}"}],
+      "body": {"mode": "formdata", "formdata": [{"key": "image", "type": "file", "src": []}]},
+      "url": "{{base_url}}/api/v1/predict"},
+      "event": [{"listen": "test", "script": {"exec": [
+        "pm.test('200 OK', () => pm.response.to.have.status(200));",
+        "pm.test('has label + confidence', () => { const j = pm.response.json(); pm.expect(j).to.have.property('label'); pm.expect(j.confidence).to.be.within(0,1); });"
+      ]}}]},
+    {"name": "Predict (no key -> 401)", "request": {"method": "POST",
+      "body": {"mode": "formdata", "formdata": [{"key": "image", "type": "file", "src": []}]},
+      "url": "{{base_url}}/api/v1/predict"}},
+    {"name": "Predict (text file -> 415)", "request": {"method": "POST",
+      "header": [{"key": "X-API-Key", "value": "{{api_key}}"}],
+      "body": {"mode": "formdata", "formdata": [{"key": "image", "type": "file", "src": []}]},
+      "url": "{{base_url}}/api/v1/predict"}}
+  ]
+}

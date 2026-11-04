@@ -1,0 +1,43 @@
+# VisionGuard CI (Task 6.6): lint -> tests -> build the Docker image, on every push / PR.
+name: ci
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Lint (ruff)
+        run: ruff check .
+      - name: Tests (mock model, SQLite)
+        env:
+          INFERENCE_MODE: mock
+        run: pytest -v
+
+  docker:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build web image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: false
+          tags: visionguard-web:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      # Secrets (e.g. DAGSHUB_TOKEN to pull the model, a registry password to push) live in
+      # GitHub -> Settings -> Secrets and variables -> Actions, and are referenced as
+      # ${{ secrets.NAME }}. They are masked in logs and never written in this file.

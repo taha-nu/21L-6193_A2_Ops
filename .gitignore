@@ -1,0 +1,26 @@
+# secrets
+.env
+.env.*
+!.env.example
+.dvc/config.local
+# data & models (versioned with DVC / MLflow, not Git)
+/data/raw
+/data/processed
+/models/*.keras
+/models/runs/
+/models/checkpoints/
+mlruns/
+mlartifacts/
+tuner/
+tuner_toy/
+*.db
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+instance/
+reports/runs/
+downloads/

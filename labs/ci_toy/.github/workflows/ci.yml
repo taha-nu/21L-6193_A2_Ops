@@ -1,0 +1,16 @@
+# Task 6.6 toy: copy this folder into a NEW throwaway GitHub repo (calc.py, tests/, .github/).
+name: toy-ci
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]   # same tests on two Python versions
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install pytest
+      - run: python -m pytest -v

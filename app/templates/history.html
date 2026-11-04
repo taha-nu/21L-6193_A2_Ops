@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}History · VisionGuard{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Prediction history</h1>
+  <p class="muted">Every analysis is recorded in the database: what was decided, when, by which model and how confidently.</p>
+  {% if stats %}
+  <div class="stats">
+    <div><span>{{ rows.total }}</span>total</div>
+    {% for label, n, avg in stats %}<div><span>{{ n }}</span>{{ label }} · avg conf {{ '%.0f' % (avg*100) }}%</div>{% endfor %}
+  </div>
+  {% endif %}
+  {% if rows.items %}
+  <div class="tablewrap"><table>
+    <thead><tr><th>#</th><th>When (UTC)</th><th>File</th><th>Decision</th><th>Confidence</th><th>P(AI)</th><th>Threshold</th><th>Model</th><th>Mode</th></tr></thead>
+    <tbody>
+    {% for r in rows.items %}
+      <tr>
+        <td>{{ r.id }}</td><td>{{ r.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        <td class="file" title="sha256 {{ r.image_sha256 }}">{{ r.filename }}</td>
+        <td><span class="pill {{ 'ai' if r.label == 'AI-generated' else 'real' }}">{{ r.label }}</span></td>
+        <td>{{ '%.1f' % (r.confidence*100) }}%</td><td>{{ '%.3f' % r.prob_ai }}</td><td>{{ '%.2f' % r.threshold }}</td>
+        <td>{{ r.model_name }} v{{ r.model_version }}</td><td>{{ r.inference_mode }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table></div>
+  <div class="pager">
+    {% if rows.has_prev %}<a href="{{ url_for('main.history', page=rows.prev_num) }}">← Newer</a>{% endif %}
+    <span>Page {{ rows.page }} of {{ rows.pages }}</span>
+    {% if rows.has_next %}<a href="{{ url_for('main.history', page=rows.next_num) }}">Older →</a>{% endif %}
+  </div>
+  {% else %}
+  <p class="empty">No predictions yet. <a href="{{ url_for('main.index') }}">Upload an image</a> to start the trail.</p>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+# Model API on the cloud VM (Task 7, pathway A/C):
+#   python scripts/fetch_model.py && docker compose -f docker-compose.api.yml up -d --build
+name: visionguard-api
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+      args:
+        TF_PACKAGE: ${TF_PACKAGE:-tensorflow-cpu==2.21.0}   # ARM VM: tensorflow==2.21.0
+    image: visionguard-api:latest
+    restart: unless-stopped
+    environment:
+      API_KEY: ${API_KEY:?set API_KEY in .env}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-8}
+    ports:
+      - "${API_PORT:-8080}:8080"

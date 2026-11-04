@@ -1,0 +1,13 @@
+# Runtime dependencies of the web app and the model API (used by the Docker images).
+# tensorflow-cpu: CPU-only wheel (~250 MB) instead of `tensorflow` (pulls CUDA libraries on
+# Linux, >1 GB with [and-cuda]). Inference on one image at a time is fast enough on CPU.
+# On ARM64 machines (Oracle Ampere, Apple Silicon Docker) use `tensorflow==2.21.0` instead:
+# build with  --build-arg TF_PACKAGE=tensorflow==2.21.0
+flask==3.1.3
+flask-sqlalchemy==3.1.1
+sqlalchemy==2.1.6
+psycopg[binary]==3.2.13
+gunicorn==23.0.0
+pillow==12.3.0
+requests==2.34.2
+python-dotenv==1.2.3

@@ -1,0 +1,31 @@
+# Default hyper-parameters. Every value can be overridden on the command line,
+# e.g.  python -m src.train --model transfer --lr 0.0005 --run-name lr5e-4
+seed: 42
+img_size: 224
+batch_size: 32
+split: {train: 0.70, val: 0.15, test: 0.15}
+
+baseline:
+  lr: 0.001
+  epochs: 30
+  dropout: 0.4
+
+transfer:
+  backbone: mobilenet_v2      # or efficientnet_b0
+  lr: 0.001                   # stage 1 (frozen backbone)
+  epochs: 15
+  fine_tune_lr: 0.00001       # stage 2: ~100x smaller
+  fine_tune_epochs: 10
+  dropout: 0.3
+  unfreeze: last_block        # "last_block" or an integer number of layers
+
+augment: {flip: true, rotation: 0.05, zoom: 0.1, contrast: 0.1}
+
+callbacks: {early_stop_patience: 5, reduce_lr_patience: 2, reduce_lr_factor: 0.3}
+
+threshold:
+  strategy: max_fpr           # max_fpr | youden | f1
+  max_fpr: 0.05               # at most 5% real photos wrongly flagged as AI (on val)
+
+registry:
+  model_name: VisionGuard

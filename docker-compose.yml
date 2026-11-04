@@ -1,0 +1,49 @@
+# VisionGuard stack (Task 6.3):  cp .env.example .env  (edit it)  &&  docker compose up -d --build
+# Two services on Compose's private network; the web app reaches Postgres at host "db".
+name: visionguard
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-visionguard}
+      POSTGRES_USER: ${POSTGRES_USER:-visionguard}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data          # named volume: data survives `down`/rebuilds
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    # no `ports:` on purpose -> Postgres is reachable only from other services on this network
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        TF_PACKAGE: ${TF_PACKAGE:-tensorflow-cpu==2.21.0}
+    image: visionguard-web:latest
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy                # start only after pg_isready succeeds
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-visionguard}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-visionguard}
+      SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY in .env}
+      INFERENCE_MODE: ${INFERENCE_MODE:-local}     # local = model inside this container
+      API_URL: ${API_URL:-}                        # used when INFERENCE_MODE=remote (Task 8)
+      API_KEY: ${API_KEY:-}
+      MODEL_PATH: /app/models/champion.keras
+      THRESHOLD: ${THRESHOLD:-}                    # empty -> use models/serving_config.json
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-8}
+    volumes:
+      - ./models:/app/models:ro                    # champion model mounted read-only
+    ports:
+      - "${WEB_PORT:-8000}:8000"
+
+volumes:
+  pgdata:

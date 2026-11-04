@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Result · VisionGuard{% endblock %}
+{% block content %}
+{% set ai = p.label == 'AI-generated' %}
+<section class="card verdict {{ 'is-ai' if ai else 'is-real' }}">
+  <p class="eyebrow">Verdict for <strong>{{ row.filename }}</strong></p>
+  <h1>{{ p.label }}</h1>
+  <div class="meter" role="meter" aria-valuenow="{{ (p.confidence*100)|round(1) }}" aria-valuemin="0" aria-valuemax="100">
+    <div class="fill" style="width: {{ (p.confidence*100)|round(1) }}%"></div>
+  </div>
+  <p class="big">{{ '%.1f' % (p.confidence*100) }}% confident</p>
+  <dl class="facts">
+    <div><dt>P(AI-generated)</dt><dd>{{ '%.3f' % p.prob_ai }}</dd></div>
+    <div><dt>Decision threshold</dt><dd>{{ '%.3f' % p.threshold }}</dd></div>
+    <div><dt>Model</dt><dd>{{ p.model_name }} v{{ p.model_version }}</dd></div>
+    <div><dt>Image</dt><dd>{{ row.image_width }}×{{ row.image_height }}</dd></div>
+    <div><dt>Latency</dt><dd>{{ p.latency_ms }} ms</dd></div>
+    <div><dt>Logged as</dt><dd>#{{ row.id }} · {{ row.created_at.strftime('%Y-%m-%d %H:%M:%S') }} UTC</dd></div>
+  </dl>
+  <p class="caveat"><strong>Caveat:</strong> {{ caveat }}</p>
+  <a class="btn" href="{{ url_for('main.index') }}">Check another image</a>
+  <a class="btn ghost" href="{{ url_for('main.history') }}">View history</a>
+</section>
+{% endblock %}

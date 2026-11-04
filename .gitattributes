@@ -1,0 +1,6 @@
+# Keep Linux line endings for shell scripts and Docker files, also when cloned on Windows
+# (CRLF breaks bash with "$'\r': command not found").
+*.sh        text eol=lf
+Dockerfile* text eol=lf
+*.yml       text eol=lf
+*.py        text eol=lf

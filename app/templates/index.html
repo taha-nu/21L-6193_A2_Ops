@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card">
+  <h1>Is this image AI-generated?</h1>
+  <p class="muted">Upload a photo or picture. The model returns a verdict and how confident it is.
+     The image is analysed in memory and is not stored.</p>
+  <form method="post" action="{{ url_for('main.predict') }}" enctype="multipart/form-data" id="form">
+    <label class="drop" id="drop">
+      <input type="file" name="image" id="file" accept="{% for e in allowed %}.{{ e }}{% if not loop.last %},{% endif %}{% endfor %}" required>
+      <img id="preview" alt="" hidden>
+      <span id="hint">Click or drop an image here<br><small>{{ allowed|join(', ') }} · max {{ '%g' % max_mb }} MB</small></span>
+    </label>
+    <button type="submit" class="btn" id="go">Analyse image</button>
+  </form>
+</section>
+<script>
+  const f = document.getElementById('file'), img = document.getElementById('preview'),
+        hint = document.getElementById('hint'), drop = document.getElementById('drop');
+  f.addEventListener('change', () => {
+    const file = f.files[0]; if (!file) return;
+    img.src = URL.createObjectURL(file); img.hidden = false; hint.textContent = file.name;
+  });
+  ['dragover','dragenter'].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave','drop'].forEach(e => drop.addEventListener(e, () => drop.classList.remove('over')));
+  drop.addEventListener('drop', ev => { ev.preventDefault(); f.files = ev.dataTransfer.files; f.dispatchEvent(new Event('change')); });
+  document.getElementById('form').addEventListener('submit', () => {
+    const b = document.getElementById('go'); b.disabled = true; b.textContent = 'Analysing…';
+  });
+</script>
+{% endblock %}

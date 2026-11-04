@@ -1,0 +1,12 @@
+# Task 6.4 "BEFORE" image: what you get without any care. Do NOT use; build it only to
+# compare sizes:   docker build -f docker/Dockerfile.naive -t visionguard-web:naive .
+#  - full python image (compilers, docs, ~1 GB base)
+#  - full `tensorflow` package
+#  - pip cache kept in the layer
+#  - source copied before dependencies (any code change -> reinstall everything)
+#  - runs as root, no .dockerignore effect on what we install
+FROM python:3.12
+WORKDIR /app
+COPY . .
+RUN pip install -r requirements-serve.txt tensorflow==2.21.0
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:create_app()"]

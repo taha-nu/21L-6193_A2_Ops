@@ -1,0 +1,5 @@
+-r requirements-serve.txt
+tensorflow-cpu==2.21.0; sys_platform != "darwin" and platform_machine != "aarch64"   # Windows / Linux x86
+tensorflow==2.21.0; sys_platform == "darwin" or platform_machine == "aarch64"       # Mac (Apple Silicon) / ARM Linux
+pytest==9.1.1
+ruff==0.17.2
