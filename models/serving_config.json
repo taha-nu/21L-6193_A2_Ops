@@ -1,0 +1,14 @@
+{
+  "threshold": 0.8558493852615356,
+  "img_size": 224,
+  "model_type": "transfer",
+  "backbone": "mobilenet_v2",
+  "classes": [
+    "real",
+    "ai"
+  ],
+  "run_id": "be8f4fc3b5df42158315ec1aab03a8d2",
+  "model_name": "VisionGuard",
+  "model_version": "2",
+  "alias": "champion"
+}
