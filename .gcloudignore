@@ -1,0 +1,29 @@
+# Upload list for `gcloud builds submit` (Task 7, Cloud Run).
+# Without this file gcloud falls back to .gitignore, which excludes models/*.keras,
+# so the champion model would be missing and COPY in Dockerfile.api would fail.
+.gcloudignore
+.git
+.github
+.env
+.env.*
+**/__pycache__
+*.pyc
+.venv
+venv
+data/
+mlruns/
+mlartifacts/
+tuner/
+tuner_toy/
+reports/
+report/
+labs/
+tests/
+docs/
+models/runs/
+models/checkpoints/
+*.db
+.dvc/
+.pytest_cache
+.ruff_cache
+instance/

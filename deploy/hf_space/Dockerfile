@@ -1,0 +1,26 @@
+# Model API image for Hugging Face Spaces (Task 7). Same as docker/Dockerfile.api, except the
+# app user gets uid 1000, the user id Spaces run containers as. Build context = Space root.
+# Run scripts/fetch_model.py first so models/champion.keras exists, then:
+#   docker build -f docker/Dockerfile.api -t visionguard-api .
+FROM python:3.12-slim AS builder
+ARG TF_PACKAGE=tensorflow-cpu==2.21.0
+ENV PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+RUN pip install flask==3.1.3 gunicorn==23.0.0 pillow==12.3.0 "${TF_PACKAGE}"
+
+FROM python:3.12-slim
+ENV PATH="/opt/venv/bin:$PATH" PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 \
+    TF_CPP_MIN_LOG_LEVEL=2 MODEL_PATH=/app/models/champion.keras PORT=8080
+RUN groupadd --system app && useradd --uid 1000 --gid app --home /app --shell /usr/sbin/nologin app
+COPY --from=builder /opt/venv /opt/venv
+WORKDIR /app
+COPY --chown=app:app models/champion.keras models/serving_config.json models/
+COPY --chown=app:app visionguard/ visionguard/
+COPY --chown=app:app api/ api/
+USER app
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+  CMD python -c "import urllib.request,os; urllib.request.urlopen(f'http://127.0.0.1:{os.environ[\"PORT\"]}/api/v1/health', timeout=4)" || exit 1
+# API_KEY is provided at run time (-e / platform secret), never baked into the image
+CMD ["sh", "-c", "exec gunicorn -b 0.0.0.0:${PORT} -w 1 --threads 4 --timeout 120 --access-logfile - 'api.server:create_api()'"]
