@@ -9,7 +9,7 @@ TensorFlow/Keras model · MLflow on DagsHub · DVC · Flask · PostgreSQL · Doc
 |---|---|
 | GitHub | `https://github.com/taha-nu/21L-6193_A2_Ops` |
 | DagsHub (code, data, MLflow) | `https://dagshub.com/taha-nu/21L-6193_A2_Ops` |
-| Model API | `http://<vm-ip>:8080/api/v1/health` |
+| Model API (GitHub Codespaces) | `https://vg-api-6vpp4vxx595c47xv-8080.app.github.dev/api/v1/health` |
 
 > Naming rule: `21L-6193_A2_Ops` for the GitHub repo, DagsHub repo, MLflow experiment (`ROLL_NO` in `.env`) and the cloud instance. Replace `taha-nu` with your DagsHub username once the account exists.
 
